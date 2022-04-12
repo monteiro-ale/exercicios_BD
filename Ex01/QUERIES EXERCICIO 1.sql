@@ -121,3 +121,50 @@ WHERE atividadesprog.Codatividadeanalise NOT IN
         WHERE
             progranador NOT LIKE 'Jefer%'
 	)
+
+
+ALUGUEL 800
+INTERNET 100
+FACULDADE 550
+LUZ 219
+CIGARRO 360
+PENSAO 200
+TRANSPORTE 200
+RENOVACAO BOLSA 586,18
+3015
+SOBRA 685 
+
+WITH T1 AS (SELECT cliente_p.nome,
+				cliente_p.cod_cli,
+                passagem.cod_cli,
+			    passagem.num_voo,
+                cidade_cheg,
+	   			num_voo
+			FROM cliente_p
+            INNER JOIN passagem ON cliente_p.cod_cli = passagem.cod_cli 
+            INNER JOIN voo ON passagem.num_voo = voo.num_voo
+            WHERE passagem.data IN ('2002-09-20')
+            AND cidade_cheg NOT IN ('Rio de Janeiro')
+),
+T2 AS (SELECT
+			passagem.cod_cli,
+			passagem.num_voo
+			FROM passagem
+	   		WHERE passagem.data IN ('2002-09-20')
+),
+T3 AS (SELECT 	cidade_cheg,
+	   			num_voo
+	   		FROM voo
+	   		WHERE cidade_cheg NOT IN ('Rio de Janeiro')
+),
+T4 AS (SELECT DISTINCT
+			passagem.cod_cli
+			FROM passagem
+	   		WHERE passagem.data IN ('2002-09-20')
+)
+
+SELECT T1.nome
+FROM T1
+INNER JOIN T2 ON T1.cod_cli = T2.cod_cli
+INNER JOIN T3 ON T2.num_voo = T3.num_voo
+GROUP BY T1.nome;
